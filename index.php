@@ -82,6 +82,14 @@ function price_format ($number)
     }
     return $result.'<b class="rub">p</b>';
 }
+
+function timer()
+{
+    $now = new DateTime('now');
+    $tomorrow_midnight = new DateTime('tomorrow midnight');
+    $interval = $now->diff($tomorrow_midnight);
+    return $interval->format('%h:%i');
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -169,7 +177,7 @@ function price_format ($number)
                                 <span class="lot__cost"><?=price_format($lot["price"])?></span>
                             </div>
                             <div class="lot__timer timer">
-                                12:23
+                                <?=timer()?>
                             </div>
                         </div>
                     </div>
