@@ -1,10 +1,10 @@
-
-CREATE DATABASE IF NOT EXISTS YeticaveK DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE YeticaveK;
+CREATE DATABASE IF NOT EXISTS yeticavek DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE yeticavek ;
 
 CREATE TABLE category (
   id int(11) PRIMARY KEY AUTO_INCREMENT,
-  name varchar(50) NOT NULL
+  name varchar(50) NOT NULL,
+  name_eng varchar(50) NOT NULL
 );
 
 CREATE TABLE lot (
@@ -19,7 +19,7 @@ CREATE TABLE lot (
   bet_step int(11) NOT NULL,
 
   author_id int(11) NOT NULL,
-  winner_id int(11) NOT NULL,
+  winner_id int(11) NULL,
   category_id int(11) NOT NULL
 );
 
