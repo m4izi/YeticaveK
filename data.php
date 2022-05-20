@@ -1,5 +1,5 @@
 <?php
-$connection = mysqli_connect('127.0.0.1', 'root', '', 'yeticaveartyom');
+$connection = mysqli_connect('127.0.0.1', 'root', '', 'yeticavek');
 mysqli_set_charset($connection, utf8);
 
 if (!$connection) {
