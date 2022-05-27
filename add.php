@@ -1,45 +1,57 @@
- 'title' => 'Добавление лота'
-]);
-if(!isset($_SESSION['user_name'])){
-    $page_content = include_template('403.php', ['array' => $array, 'category_info'=>$category_info,]);
-    $layout_content = include_template('layout.php', [
-        'main' => $page_content,
-        'array' => $array,
-        'title' => 'Неавторизованный пользователь'
-    ]);
+ <?php
+require_once ('functions.php');
+require_once ('conn.php');
+
+$i=0;
+$form_class = "";
+$div_class = array("","","","","","","");
+$check = false;
+/*
+$form_items = array("lot-name" =>$_POST['lot-name'],"category" =>$_POST['category'],"message" =>$_POST['message'],
+    "lot-img" =>$_POST['lot-img'],"lot-rate" =>$_POST['lot-rate'],"lot-step" =>$_POST['lot-step'],"lot-date" =>$_POST['lot-date']);
+*/
+$form_items = array($_POST['lot-name'],$_POST['category'],$_POST['message'],
+    444,$_POST['lot-rate'],$_POST['lot-step'],$_POST['lot-date']);
+if(filter_var($form_items[4],FILTER_SANITIZE_NUMBER_INT)!=$form_items[4]){
+    $div_class[5] = "form__item--invalid";
+    $check = true;
 }
-else{
-    if($_SERVER['REQUEST_METHOD']=='POST') {
-        $link = mysqli_connect('127.0.0.1','root','','yeticave');
-        mysqli_set_charset($link, utf8);
-        $lot_name = $_POST["lot-name"];
-        $category = $_POST["category"];
-        $description = $_POST["message"];
-        $start_price = $_POST["lot-rate"];
-        $step_price = $_POST["lot-step"];
-        $date_end = $_POST["lot-date"];
-        $image= 'img/'.$_FILES['image']['name'];
-        move_uploaded_file($_FILES['image']['tmp_name'], 'img/'.$_FILES['image']['name']);
-        $error_name1 = "";
-        if(empty($lot_name) || empty($category) || empty($description) || empty($start_price) || empty($step_price) || empty($date_end) || empty($_FILES['image']['name'])){
-            $error_name1 = "form--invalid";
-            $page_content = include_template('add.php', ['array' => $array, 'category_info'=>$category_info, 'error_name1'=>$error_name1]);
-            $layout_content = include_template('layout.php', [
-                'main' => $page_content,
-                'array' => $array,
-                'title' => 'Добавление лота'
-            ]);
-        }
-        else{
-            $query_category = "SELECT id_category from category where name ='$category'";
-            $query = "INSERT INTO lot (id_lot,id_user,id_category,id_winner,creation_date,lot_name,description,image,start_price,date_end,step_price)
-        VALUES (NULL,1,($query_category),NULL,now(),'$lot_name','$description ','$image',$start_price,'$date_end',$step_price)";
-            $result4 = mysqli_query($link,$query);
-            $query_id_lot = "SELECT id_lot from lot where lot_name= '$lot_name'";
-            $result5 = mysqli_query($link,$query_id_lot);
-            $ID= $result5->fetch_row()[0];
-            header("Location:lot.php?id_lot=$ID");
-        }
+if(filter_var($form_items[5],FILTER_SANITIZE_NUMBER_INT)!=$form_items[5]){
+    $div_class[6] = "form__item--invalid";
+    $check = true;
+}
+foreach ($form_items as $form_item){
+    $i++;
+    if($form_item==''){
+        $form_class = "form--invalid";
+        $div_class[$i] = "form__item--invalid";
+        $check = true;
     }
 }
-function is_empty($lot,$lot2,$lot3,$lot4,$lot5,$lot6){
+if($check){
+    $page_content = include_template('add-lot.php',  [
+        'cat' => $cat,
+        'form_class' => $form_class,
+        'div_class' => $div_class,
+        'form_items' => $form_items
+    ]);
+    $layout_content = include_template('layout.php', [
+ ]);
+ print($layout_content);
+}
+else{
+    $uploaddir = 'img/';
+    $uploadfile = $uploaddir . basename($_FILES['lot-img']['name']);
+    move_uploaded_file($_FILES['lot-img']['tmp_name'], $uploadfile);
+    foreach ($cat as $catd){
+        if($catd['catg_name']==$form_items[1]){
+            $s = $catd['id_category'];
+        }
+    }
+    $sql ="INSERT INTO `lot` (`date_create`, `lot_name`, `expl`, `img`, `start_price`, `end_date`, `step`, `id_author`, `id_winner`, `id_category`) VALUES ('2022-05-20','$form_items[0]','$form_items[2]','$uploadfile','$form_items[4]','$form_items[6]','$form_items[5]',1,1,'$s')";
+    $result = mysqli_query($link, $sql);
+    $sql = "SELECT * FROM `lot` group BY id_lot DESC LIMIT 1";
+    $result = mysqli_query($link, $sql);
+    $created_lot = $result ->fetch_assoc();
+    header('Location: ../lot.php?id='.$created_lot['id_lot']);
+}
