@@ -34,7 +34,7 @@
             <?php else: ?>
                 <ul class="user-menu__list">
                     <li class="user-menu__item">
-                        <a href="#">Регистрация</a>
+                        <a href="sign_up.php">Регистрация</a>
                     </li>
                     <li class="user-menu__item">
                         <a href="#">Вход</a>
@@ -60,7 +60,7 @@
             {
             ?>
                 <li class="nav__item">
-                    <a href="pages/all-lots.html"><?=$category['rus']?></a>
+		    <a href="#"><?=$category["name"]?></a>
                 </li>
             <?php
             }

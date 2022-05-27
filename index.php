@@ -23,7 +23,12 @@ $layout_content = include_template(
     'user_name' => $user_name
     ]
 );
-
+foreach($array as $category){
+                ?>
+                <li class="promo__item promo__item--<?=$category["eng_name"]?>">
+                    <a class="promo__link" href="all-lots.html"><?=$category["name"]?></a>
+                    <a class="promo__link" href="#"><?=$category["name"]?></a>
+                </li>
 print($layout_content);
 ?>
 
